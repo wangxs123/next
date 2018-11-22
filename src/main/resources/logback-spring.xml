@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 文件输出格式 -->
+    <property name="PATTERN_CONSOLE" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight([outbound-cms]-﻿[%-5level]) - %thread - %green(%logger){50} %yellow(%M) %cyan(%L) - %msg%n"/>
+    <property name="PATTERN_LOG" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [outbound-cms]-﻿[%-5level] - %thread - %logger{50} %M %L - %msg%n"/>
+    <!-- qa文件路径 -->
+    <property name="QA_FILE_PATH" value="${catalina.base}/logs/outbound-cms"/>
+    <!-- product文件路径 -->
+    <property name="PRO_FILE_PATH" value="${catalina.base}/logs/outbound-cms"/>
+
+    <!-- 开发环境 -->
+    <springProfile name="dev">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${PATTERN_CONSOLE}</pattern>
+            </encoder>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="uat">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${PATTERN_CONSOLE}</pattern>
+            </encoder>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+
+    <!-- qa测试环境 -->
+    <springProfile name="qa">
+
+        <!-- 按照每天生成日志文件（所有） -->
+        <appender name="QA-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>${QA_FILE_PATH}/all/outbound-cms.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+                <TimeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <MaxFileSize>10MB</MaxFileSize>
+                </TimeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN_LOG}</pattern>
+            </layout>
+        </appender>
+
+        <!-- QA（Info日志） -->
+        <appender name="QA-INFO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>${QA_FILE_PATH}/info/outbound-cms_info.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+                <TimeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <MaxFileSize>10MB</MaxFileSize>
+                </TimeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>INFO</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN_LOG}</pattern>
+            </layout>
+        </appender>
+
+        <!-- QA（Warn日志）-->
+        <appender name="QA-WARN-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>${QA_FILE_PATH}/warn/outbound-cms_warn.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+                <TimeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <MaxFileSize>10MB</MaxFileSize>
+                </TimeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>WARN</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN_LOG}</pattern>
+            </layout>
+        </appender>
+
+        <!-- QA（Error日志）-->
+        <appender name="QA-ERROR-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>${QA_FILE_PATH}/error/outbound-cms_error.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+                <TimeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <MaxFileSize>10MB</MaxFileSize>
+                </TimeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>ERROR</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN_LOG}</pattern>
+            </layout>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="QA-FILE"/>
+            <appender-ref ref="QA-INFO-FILE"/>
+            <appender-ref ref="QA-WARN-FILE"/>
+            <appender-ref ref="QA-ERROR-FILE"/>
+        </root>
+    </springProfile>
+
+    <!-- 生产环境 -->
+    <springProfile name="product">
+
+        <!-- 按照日志大小，当单个文件超过设定阈值，则叠加生成新的文件-->
+        <appender name="PRODUCT-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>${PRO_FILE_PATH}/all/outbound-cms.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+                <TimeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <MaxFileSize>10MB</MaxFileSize>
+                </TimeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN_LOG}</pattern>
+            </layout>
+        </appender>
+
+        <!-- Product（Info日志） -->
+        <appender name="PRODUCT-INFO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>${PRO_FILE_PATH}/info/outbound-cms_info.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+                <TimeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <MaxFileSize>10MB</MaxFileSize>
+                </TimeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>INFO</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN_LOG}</pattern>
+            </layout>
+        </appender>
+
+        <!-- Product（Warn日志） -->
+        <appender name="PRODUCT-WARN-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>${PRO_FILE_PATH}/warn/outbound-cms_warn.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+                <TimeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <MaxFileSize>10MB</MaxFileSize>
+                </TimeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>WARN</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN_LOG}</pattern>
+            </layout>
+        </appender>
+
+        <!-- Product（Error日志） -->
+        <appender name="PRODUCT-ERROR-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>${PRO_FILE_PATH}/error/outbound-cms_error.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+                <TimeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <MaxFileSize>10MB</MaxFileSize>
+                </TimeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>ERROR</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN_LOG}</pattern>
+            </layout>
+        </appender>
+
+
+        <root level="INFO">
+            <appender-ref ref="PRODUCT-FILE"/>
+            <appender-ref ref="PRODUCT-INFO-FILE"/>
+            <appender-ref ref="PRODUCT-WARN-FILE"/>
+            <appender-ref ref="PRODUCT-ERROR-FILE"/>
+        </root>
+    </springProfile>
+</configuration>

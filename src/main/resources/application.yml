@@ -1,0 +1,17 @@
+#\u914D\u7F6E\u6307\u5B9A\u73AF\u5883
+spring:
+  profiles:
+    active: dev
+    #active: product
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Hongkong
+
+server:
+  port: 8089
+mybatis:
+  mapper-locations: classpath:mapping/*/*.xml
+  config-locations: classpath:mybatis-config.xml
+
+
