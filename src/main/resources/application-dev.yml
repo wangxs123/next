@@ -2,6 +2,9 @@ profiles: 开发环境(dev)
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://192.168.88.101:3306/dev?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong&zeroDateTimeBehavior=convertToNull
+#    username: root
+#    password: 124816
     url: jdbc:mysql://127.0.0.1:3306/next_dev?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong&zeroDateTimeBehavior=convertToNull
     username: root
     password: 123456

@@ -2,11 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.next.demo.mapper">
-    <update id="deleteUser" parameterType="com.next.demo.entity.user.User">
-        update user_info set state = 0 where uuid = #{uuid}
+<mapper namespace="com.next.demo.mapper.Excel.ExcelMapper">
+    <update id="updateExcel" parameterType="java.util.Map">
+        update host_record set status = 0, update_date = #{date} where host = #{host} and regex = ''
     </update>
-
+    <update id="updateDate" parameterType="java.util.Map">
+        update ces set date_time = #{date} where id = #{id}
+    </update>
 
 
 </mapper>

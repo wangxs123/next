@@ -1,5 +1,6 @@
 package com.next.demo.service.user;
 
+import com.github.pagehelper.PageInfo;
 import com.next.demo.entity.user.User;
 import com.next.demo.request.user.UserInfoReq;
 
@@ -30,7 +31,7 @@ public interface IUserInfoService {
      * @param user
      * @return
      */
-    List<User> queryUserList(User user);
+    PageInfo<User> queryUserList(User user);
 
     /**
      * 删除用户

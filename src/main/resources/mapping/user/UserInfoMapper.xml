@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.next.demo.mapper.user.UserMapper">
-    <select id="queryUser" parameterType="com.next.demo.entity.user.User"
+    <select id="queryUserList" parameterType="com.next.demo.entity.user.User"
             resultType="com.next.demo.entity.user.User">
         select
           uuid uuid,

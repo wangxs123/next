@@ -1,5 +1,6 @@
 package com.next.demo.mapper.user;
 
+import com.github.pagehelper.Page;
 import com.next.demo.entity.user.User;
 import com.next.demo.request.user.UserInfoReq;
 import org.apache.ibatis.annotations.Mapper;
@@ -32,7 +33,7 @@ public interface UserMapper{
      * @param user
      * @return
      */
-    List<User> queryUserList(User user);
+    Page<User> queryUserList(User user);
 
     /**
      * 删除用户

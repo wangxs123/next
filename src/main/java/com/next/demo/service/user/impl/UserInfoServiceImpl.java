@@ -1,5 +1,7 @@
 package com.next.demo.service.user.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.next.demo.entity.user.User;
 import com.next.demo.mapper.user.UserMapper;
 import com.next.demo.request.user.UserInfoReq;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -56,8 +59,17 @@ public class UserInfoServiceImpl implements IUserInfoService {
     }
 
     @Override
-    public List<User> queryUserList(User user) {
-        return null;
+    public PageInfo<User> queryUserList(User user) {
+        Page<User> userInfo = new Page<>();
+        try {
+            userInfo = userMapper.queryUserList(user);
+            logger.info("查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("查询失败");
+            return new PageInfo<>(userInfo);
+        }
+        return new PageInfo<>(userInfo);
     }
 
     @Override

@@ -1,20 +1,29 @@
 package com.next.demo.utils;
 
+import com.next.demo.mapper.Excel.ExcelMapper;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author
  * @date
  */
+@RestController
+@RequestMapping("/")
 public class ExcelHandler {
-    public static void getExcelInfo(InputStream inputStream) {
+    @Autowired
+    ExcelMapper excelMapper;
+    public void getExcelInfo(InputStream inputStream) {
         try {
             /** 根据版本选择创建Workbook的方式 */
             Workbook workbook = Workbook.getWorkbook(inputStream);
@@ -26,22 +35,40 @@ public class ExcelHandler {
         }
     }
 
-    private static void readExcelValue(Workbook wb) {
+    private  void readExcelValue(Workbook wb) {
         // 得到第一个shell
         Sheet sheet = wb.getSheet(0);
         int rsRows = sheet.getRows();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Map<Object,Object> map = new HashMap<>(16);
         for (int i=1;i<rsRows;i++){
-            System.out.println(sheet.getCell(0,i).getContents());
+            String date = simpleDateFormat.format(new Date());
+            map.put("date",date);
+            map.put("host",sheet.getCell(0,i).getContents());
+            excelMapper.updateExcel(map);
         }
+        System.out.println("rsRows......."+rsRows);
     }
 
 
-    public static void main(String[] args) {
-        try {
-            InputStream inputStream = new FileInputStream("F:/ceshi.xls");
-            getExcelInfo(inputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+//    @RequestMapping(value = "/time",method = RequestMethod.POST)
+//    public void updateExcel(){
+//        try {
+//            InputStream inputStream = new FileInputStream("F:/ss.xls");
+//            getExcelInfo(inputStream);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
+//    @RequestMapping(value = "/time",method = RequestMethod.POST)
+//    public  void updateTime(){
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String date = simpleDateFormat.format(new Date());
+//        Map<Object,Object> map = new HashMap<>(16);
+//        map.put("date",date);
+//        map.put("id",1);
+//        excelMapper.updateDate(map);
+//    }
 }

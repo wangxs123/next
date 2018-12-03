@@ -1,16 +1,17 @@
 package com.next.demo.controller.user;
 
+import com.github.pagehelper.PageInfo;
 import com.next.demo.entity.user.User;
 import com.next.demo.request.user.UserInfoReq;
+import com.next.demo.response.Result;
 import com.next.demo.service.user.impl.UserInfoServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author wangxs
@@ -24,18 +25,18 @@ public class UserInfoController {
     UserInfoServiceImpl userInfoService;
 
     @PostMapping("/addUser")
-    public Object addUser(@RequestBody @Validated(UserInfoReq.AddUserInfoGroup.class) UserInfoReq req){
+    public Result addUser(@RequestBody @Validated(UserInfoReq.AddUserInfoGroup.class) UserInfoReq req){
         logger.info("begin UserInfoController addUser method ...request:"+req);
         Boolean result = userInfoService.addUser(req);
         if(result){
-            return "success";
+            return new Result("success");
         }else {
-            return "failed";
+            return new Result("failed");
         }
     }
-    @PostMapping("/queryUser")
-    public User queryUser(User user){
-        User userInfo = userInfoService.queryUser(user);
-        return userInfo;
+    @RequestMapping("/queryUser")
+    public Result<PageInfo> queryUser(User user){
+        PageInfo<User> userInfo = userInfoService.queryUserList(user);
+        return new Result<>(userInfo);
     }
 }
